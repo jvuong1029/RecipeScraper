@@ -68,7 +68,7 @@ function getRecipe(source: string) {
 
             // retrieve ingredients on recipe page
             dom.window.document.querySelectorAll<HTMLParagraphElement>(".o-Ingredients__a-Ingredient").forEach(e => {
-                let temp = new Ingredient(e.innerText);
+                let temp = new Ingredient(e.textContent);
                 console.log(temp);
                 ingredients.push(temp);
             });
