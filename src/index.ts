@@ -8,6 +8,7 @@ const { JSDOM } = jsdom;
 // let allows the variable to be changed after each page
 // initially assigned is the first page of the list of all the recipes
 // this is different than var since var is a global variable that won't be "garbage collected" after each run, don't use var unless frontend
+// url must be changed since we have to go through all the pages
 let url = "https://www.foodnetwork.com/search/p/1";
 // maxRecipes is set to 0 at first and let is used because we need to scrape for how many recipes there are
 let maxRecipes = 0;
@@ -36,10 +37,10 @@ getHtml(url).then((html: {}) => {
 
 // delays the program until the information is loaded and obtained
 async function getHtml(source: string) {
-    return new Promise ((resolve, reject) => {
-        if (url === undefined) reject("No next button");
+    return new Promise((resolve, reject) => {
+        if(url === undefined) reject("No next button");
         request(source, (error, response, html) => {
-            if (!error && response.statusCode == 200) {// 200 is special code like 401, etc
+            if(!error && response.statusCode == 200) {// 200 is special code like 401, etc
                 resolve(html);
             }
             else {
@@ -50,7 +51,7 @@ async function getHtml(source: string) {
 }
 
 let recipeUrl = "https://www.foodnetwork.com/recipes/oven-baked-salmon-recipe-1911951";
-getRecipe(recipeUrl).then(r => console.log(r)).catch(e => console.error(e));
+getRecipe(recipeUrl); // .then(r => console.log(r)).catch(e => console.error(e));
 
 // Get info from recipe page link, return Recipe object
 function getRecipe(source: string) {
@@ -61,21 +62,20 @@ function getRecipe(source: string) {
             let ingredients = new Array<Ingredient>();
             let directions = new Array<Direction>();
 
-            // pic
+            // retrieve link for pic
             rec.image = dom.window.document.querySelectorAll<HTMLImageElement>(".m-MediaBlock__a-Image.a-Image")[3].src;
             console.log(`Pic url: ${rec.image}`);
 
-            // ingredients on recipe page
+            // retrieve ingredients on recipe page
             dom.window.document.querySelectorAll<HTMLParagraphElement>(".o-Ingredients__a-Ingredient").forEach(e => {
-                console.log(e);
-            let temp = new Ingredient(e.innerText);
-            console.log(temp);
-            ingredients.push(temp);
-        });
+                let temp = new Ingredient(e.innerText);
+                console.log(temp);
+                ingredients.push(temp);
+            });
 
-        rec.ingredients = ingredients;
-        rec.directions = directions;
-        resolve(rec);
+            rec.ingredients = ingredients;
+            rec.directions = directions;
+            resolve(rec);
         }).catch((e) => reject(e));
     });
 }
