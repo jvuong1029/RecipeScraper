@@ -35,12 +35,23 @@ getHtml(url).then((html: {}) => {
     console.log(url);
 }).catch(e => console.log(e));
 
+// Get recipe page
+// use '.' infront of classes
+getHtml(url).then((html) => {
+    const dom = new JSDOM(html.toString());
+    // split splits the string where the space is (" ") and makes elements with the substrings that are separated by the space
+    // without the spaces included
+    // same is done with the split with the ","
+    // join joins the separated substrings in the elements together
+    maxRecipes = Number(dom.window.document.querySelectorAll<HTMLAnchorElement>(".m-MediaBlock__a-Headline"));
+}).catch(e => console.log(e));
+
 // delays the program until the information is loaded and obtained
 async function getHtml(source: string) {
     return new Promise((resolve, reject) => {
-        if(url === undefined) reject("No next button");
+        if (url === undefined) reject("No next button");
         request(source, (error, response, html) => {
-            if(!error && response.statusCode == 200) {// 200 is special code like 401, etc
+            if (!error && response.statusCode == 200) { // 200 is special code like 401, etc
                 resolve(html);
             }
             else {
@@ -51,7 +62,7 @@ async function getHtml(source: string) {
 }
 
 let recipeUrl = "https://www.foodnetwork.com/recipes/oven-baked-salmon-recipe-1911951";
-getRecipe(recipeUrl); // .then(r => console.log(r)).catch(e => console.error(e));
+getRecipe(recipeUrl);
 
 // Get info from recipe page link, return Recipe object
 function getRecipe(source: string) {
