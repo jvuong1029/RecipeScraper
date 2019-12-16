@@ -1,37 +1,44 @@
 export interface Ingredient {
-    quantity?: number;
-    units?: string;
-    name: string;
-    special?: string;
+	name: string;
+	quantity?: number;
+	units?: string;
+	special?: string;
 }
 
 export interface Direction {
-    step?: number;
-    info: string;
+	step?: number;
+	info: string;
 }
 
 enum Level {
-    Easy,
-    Medium,
-    Hard,
+	Easy,
+	Medium,
+	Hard
 }
 
 export interface Recipe {
-    ingredients: Array<Ingredient>;
-    prepTime?: number;
-    cookTime?: number;
     name: string;
-    image?: string;
-    directions: Array<Direction>;
-    notes?: string;
-    links?: Array<string>;
-    categories?: string;
+	prepTime?: number;
+    cookTime?: number;
     yield?: number;
-    level?: Level;
+    ingredients: Array<Ingredient>;
+	directions: Array<Direction>;
+	level?: Level;
+	categories?: Array<string>;
+    image?: string;
 }
 
 export class Recipe implements Recipe {}
+
 export class Ingredient implements Ingredient {
-    constructor (name: string) { this.name = name; }
+	constructor(name: string) {
+		this.name = name;
+	}
 }
-export class Direction implements Direction {}
+
+export class Direction implements Direction {
+    constructor(step: number, info: string) {
+        this.step = step;
+        this.info = info;
+	}
+}
